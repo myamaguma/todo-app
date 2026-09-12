@@ -70,7 +70,7 @@ function addTodo(text, completed = false, dueDate = "") {
   checkbox.checked = completed;
   checkbox.addEventListener("change", () => {
     item.classList.toggle("completed", checkbox.checked);
-    dueDateLabel.classList.toggle("overdue", isOverdue(item.dataset.dueDate, checkbox.checked));
+    dueDateInputEl.classList.toggle("overdue", isOverdue(item.dataset.dueDate, checkbox.checked));
     saveTodos();
   });
 
@@ -78,12 +78,16 @@ function addTodo(text, completed = false, dueDate = "") {
   label.className = "todo-text";
   label.textContent = text;
 
-  const dueDateLabel = document.createElement("span");
-  dueDateLabel.className = "todo-due-date";
-  if (dueDate) {
-    dueDateLabel.textContent = dueDate;
-    dueDateLabel.classList.toggle("overdue", isOverdue(dueDate, completed));
-  }
+  const dueDateInputEl = document.createElement("input");
+  dueDateInputEl.type = "date";
+  dueDateInputEl.className = "todo-due-date";
+  dueDateInputEl.value = dueDate;
+  dueDateInputEl.classList.toggle("overdue", isOverdue(dueDate, completed));
+  dueDateInputEl.addEventListener("change", () => {
+    item.dataset.dueDate = dueDateInputEl.value;
+    dueDateInputEl.classList.toggle("overdue", isOverdue(dueDateInputEl.value, item.classList.contains("completed")));
+    saveTodos();
+  });
 
   const deleteButton = document.createElement("button");
   deleteButton.type = "button";
@@ -94,7 +98,7 @@ function addTodo(text, completed = false, dueDate = "") {
     saveTodos();
   });
 
-  item.append(checkbox, label, dueDateLabel, deleteButton);
+  item.append(checkbox, label, dueDateInputEl, deleteButton);
   list.appendChild(item);
 }
 
