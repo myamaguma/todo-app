@@ -17,6 +17,27 @@ form.addEventListener("submit", (event) => {
 
 function addTodo(text) {
   const item = document.createElement("li");
-  item.textContent = text;
+  item.className = "todo-item";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.className = "todo-checkbox";
+  checkbox.addEventListener("change", () => {
+    item.classList.toggle("completed", checkbox.checked);
+  });
+
+  const label = document.createElement("span");
+  label.className = "todo-text";
+  label.textContent = text;
+
+  const deleteButton = document.createElement("button");
+  deleteButton.type = "button";
+  deleteButton.className = "todo-delete";
+  deleteButton.textContent = "削除";
+  deleteButton.addEventListener("click", () => {
+    item.remove();
+  });
+
+  item.append(checkbox, label, deleteButton);
   list.appendChild(item);
 }
